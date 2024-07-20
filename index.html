@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milk Warmer Calculator</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
     <style>
         body { font-family: Arial, sans-serif; max-width: 300px; margin: 0 auto; padding: 20px; }
         input, button { display: block; width: 100%; margin: 10px 0; padding: 5px; }
@@ -24,27 +27,35 @@
     <div id="result"></div>
 
     <script>
+        // Calculator functionality
         document.getElementById('calculator').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const volume = parseFloat(document.getElementById('quantity').value);
             const startTemp = parseFloat(document.getElementById('startTemp').value);
             
-            // Constants based on our physical model
             const a = 0.00919; // seconds per mL
             const b = 1; // seconds per °C of temperature rise
-            
-            // Target temperature is 37°C
             const targetTemp = 37;
             
-            // Calculate heating time
             let time = a * volume + b * (targetTemp - startTemp);
-            
-            // Round up to the nearest second
             time = Math.ceil(time);
             
             document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
         });
+
+        // Service Worker registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
