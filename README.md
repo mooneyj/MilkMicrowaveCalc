@@ -4,7 +4,7 @@ A simple yet precise Progressive Web App (PWA) designed to calculate microwave h
 
 ## Features:
 
-- Calculates heating time for milk volumes between 30-130ml
+- Calculates heating time for milk volumes between 30-1000ml
 - Adjustable starting temperature
 - Based on physics principles of heat transfer
 - Works offline as a PWA
