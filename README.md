@@ -16,6 +16,7 @@ This calculator uses a formula derived from the physics of heating, taking into 
 - Microwave efficiency
 - Specific heat capacity of milk
 - Density of milk
+  This is good initial best guesss from first principles, but the two constants can be adjusted for a particular microwave, after performing a small series of heating experiments (will test and see if this is needed later).
 
 The app provides a quick, easy-to-use interface for parents to ensure their baby's milk is heated to the perfect temperature, every time.
 
