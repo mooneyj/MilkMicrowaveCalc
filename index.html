@@ -44,6 +44,29 @@
             document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
         });
 
+        // Immediate calculation on input change
+        document.getElementById('quantity').addEventListener('input', calculateTime);
+        document.getElementById('startTemp').addEventListener('input', calculateTime);
+
+        function calculateTime() {
+            const volume = parseFloat(document.getElementById('quantity').value);
+            const startTemp = parseFloat(document.getElementById('startTemp').value);
+            
+            if (isNaN(volume) || isNaN(startTemp)) {
+                document.getElementById('result').textContent = 'Please enter valid numbers';
+                return;
+            }
+
+            const a = 0.00919; // seconds per mL
+            const b = 1; // seconds per °C of temperature rise
+            const targetTemp = 37;
+            
+            let time = a * volume + b * (targetTemp - startTemp);
+            time = Math.ceil(time);
+            
+            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
+        }
+
         // Service Worker registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
