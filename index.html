@@ -37,57 +37,43 @@
     <div id="result"></div>
 
     <script>
-        // Calculator functionality
-        document.getElementById('calculator').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const volume = parseFloat(document.getElementById('quantity').value);
-            const startTemp = parseFloat(document.getElementById('startTemp').value);
-            
-            const a = 0.00919; // seconds per mL
-            const b = 1; // seconds per °C of temperature rise
+        function calculateHeatingTime(volume, startTemp) {
             const targetTemp = 37;
-            
-            let time = a * volume + b * (targetTemp - startTemp);
-            time = Math.ceil(time);
-            
-            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
-        });
+            const a = 3.939e-5;
+            const b = -641.627;
+            const c = 661.189;
+            const n = 2.739;
+            const m = 0.0035;
 
-        // Immediate calculation on input change
-        document.getElementById('quantity').addEventListener('input', calculateTime);
-        document.getElementById('startTemp').addEventListener('input', calculateTime);
-
-        function calculateTime() {
-            const volume = parseFloat(document.getElementById('quantity').value);
-            const startTemp = parseFloat(document.getElementById('startTemp').value);
-            
-            if (isNaN(volume) || isNaN(startTemp)) {
-                document.getElementById('result').textContent = 'Please enter valid numbers';
-                return;
-            }
-
-            const a = 0.00919; // seconds per mL
-            const b = 1; // seconds per °C of temperature rise
-            const targetTemp = 37;
-            
-            let time = a * volume + b * (targetTemp - startTemp);
-            time = Math.ceil(time);
-            
-            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
+            const heatingTime = a * Math.pow(volume, n) + b * Math.pow(targetTemp - startTemp, m) + c;
+            return Math.round(heatingTime);
         }
 
-        // Service Worker registration
+        function calculate() {
+            const volume = parseFloat(document.getElementById('volume').value);
+            const startTemp = parseFloat(document.getElementById('startTemp').value);
+            
+            if (isNaN(volume) || isNaN(startTemp) || volume < 30 || volume > 200 || startTemp < 0 || startTemp >= 37) {
+                document.getElementById('result').innerHTML = 'Please enter valid values.';
+                return;
+            }
+            
+            const heatingTime = calculateHeatingTime(volume, startTemp);
+            const minutes = Math.floor(heatingTime / 60);
+            const seconds = heatingTime % 60;
+            
+            let resultText = `Heating time: ${heatingTime} seconds`;
+            if (minutes > 0) {
+                resultText += ` (${minutes} min ${seconds} sec)`;
+            }
+            
+            document.getElementById('result').innerHTML = resultText;
+        }
+
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered successfully:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
+            navigator.serviceWorker.register('service-worker.js')
+                .then((reg) => console.log('Service worker registered.', reg))
+                .catch((err) => console.log('Service worker registration failed:', err));
         }
     </script>
 </body>
