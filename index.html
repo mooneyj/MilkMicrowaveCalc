@@ -40,10 +40,10 @@
         function calculateTime(volume, startTemp) {
             const a = 0.246; 
             const b = 0.310; 
-            const c = 9.777;
+            const c = -1.681;
             const targetTemp = 37;
             
-            let time = a * volume + b * (targetTemp - startTemp) + c;
+            let time = a * volume + b * startTemp + c;
             let exactTime = time;
             time = Math.ceil(time);
             
