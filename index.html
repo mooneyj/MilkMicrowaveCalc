@@ -34,7 +34,7 @@
         
         <button type="submit">Calculate</button>
     </form>
-    <div id="result"></div>
+    <div id="result" style="white-space: pre-line;"></div>
 
     <script>
         function calculateTime(volume, startTemp) {
@@ -44,9 +44,24 @@
             const targetTemp = 37;
             
             let time = a * volume + b * (targetTemp - startTemp) + c;
-            return Math.ceil(time);
+            let exactTime = time;
+            time = Math.ceil(time);
+            
+            let lowerTime = Math.floor(time / 10) * 10;
+            let upperTime = Math.ceil(time / 10) * 10;
+            
+            let lowerTemp = startTemp + (lowerTime / exactTime) * (targetTemp - startTemp);
+            let upperTemp = startTemp + (upperTime / exactTime) * (targetTemp - startTemp);
+            
+            return {
+                time: time,
+                lowerTime: lowerTime,
+                upperTime: upperTime,
+                lowerTemp: lowerTemp.toFixed(1),
+                upperTemp: upperTemp.toFixed(1)
+            };
         }
-    
+            
         function updateResult() {
             const volume = parseFloat(document.getElementById('quantity').value);
             const startTemp = parseFloat(document.getElementById('startTemp').value);
@@ -55,6 +70,14 @@
                 document.getElementById('result').textContent = 'Please enter valid numbers';
                 return;
             }
+        
+            const result = calculateTime(volume, startTemp);
+            let resultText = `Microwave time: ${result.time} seconds<br>`;
+            resultText += `Temp after ${result.lowerTime}s: ${result.lowerTemp}°C<br>`;
+            resultText += `Temp after ${result.upperTime}s: ${result.upperTemp}°C`;
+            
+            document.getElementById('result').innerHTML = resultText;
+        }
     
             const time = calculateTime(volume, startTemp);
             document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
