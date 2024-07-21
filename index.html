@@ -24,9 +24,10 @@
         <img id="app-icon" src="icon-192x192.png" alt="Milk Warmer Calculator Icon">
         <h1>Milk Warmer Calculator</h1>
     </div>
+    <!-- Rest of your HTML remains the same -->
     <form id="calculator">
         <label for="quantity">Milk quantity (ml):</label>
-        <input type="number" id="quantity" min="30" max="200" required>
+        <input type="number" id="quantity" min="30" max="1000" required>
         
         <label for="startTemp">Starting temperature (°C):</label>
         <input type="number" id="startTemp" value="3" step="0.1">
@@ -36,50 +37,46 @@
     <div id="result"></div>
 
     <script>
-        function calculateHeatingTime(volume, startTemp) {
-            const targetTemp = 37;
-            const a = 3.939e-5;
-            const b = -641.627;
-            const c = 661.189;
-            const n = 2.739;
-            const m = 0.0035;
-
-            const heatingTime = a * Math.pow(volume, n) + b * Math.pow(targetTemp - startTemp, m) + c;
-            return Math.round(heatingTime);
-        }
-
-        function displayResult(time) {
-            const minutes = Math.floor(time / 60);
-            const seconds = time % 60;
-            let resultText = `Microwave time: ${time} seconds`;
-            if (minutes > 0) {
-                resultText += ` (${minutes} min ${seconds} sec)`;
-            }
-            document.getElementById('result').textContent = resultText;
-        }
-
-        function calculateAndDisplay() {
-            const volume = parseFloat(document.getElementById('quantity').value);
-            const startTemp = parseFloat(document.getElementById('startTemp').value);
-            
-            if (isNaN(volume) || isNaN(startTemp) || volume < 30 || volume > 200 || startTemp < 0 || startTemp >= 37) {
-                document.getElementById('result').textContent = 'Please enter valid values.';
-                return;
-            }
-            
-            const heatingTime = calculateHeatingTime(volume, startTemp);
-            displayResult(heatingTime);
-        }
-
         // Calculator functionality
         document.getElementById('calculator').addEventListener('submit', function(e) {
             e.preventDefault();
-            calculateAndDisplay();
+            
+            const volume = parseFloat(document.getElementById('quantity').value);
+            const startTemp = parseFloat(document.getElementById('startTemp').value);
+            
+            const a = 0.246; 
+            const b = -0.310; 
+            const c = 9.777
+            const targetTemp = 37;
+            
+            let time = a * volume + b * (targetTemp - startTemp) + 9.777;
+            time = Math.ceil(time);
+            
+            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
         });
 
         // Immediate calculation on input change
-        document.getElementById('quantity').addEventListener('input', calculateAndDisplay);
-        document.getElementById('startTemp').addEventListener('input', calculateAndDisplay);
+        document.getElementById('quantity').addEventListener('input', calculateTime);
+        document.getElementById('startTemp').addEventListener('input', calculateTime);
+
+        function calculateTime() {
+            const volume = parseFloat(document.getElementById('quantity').value);
+            const startTemp = parseFloat(document.getElementById('startTemp').value);
+            
+            if (isNaN(volume) || isNaN(startTemp)) {
+                document.getElementById('result').textContent = 'Please enter valid numbers';
+                return;
+            }
+
+            const a = 0.00919; // seconds per mL
+            const b = 1; // seconds per °C of temperature rise
+            const targetTemp = 37;
+            
+            let time = a * volume + b * (targetTemp - startTemp);
+            time = Math.ceil(time);
+            
+            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
+        }
 
         // Service Worker registration
         if ('serviceWorker' in navigator) {
