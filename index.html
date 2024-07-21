@@ -72,15 +72,11 @@
             }
         
             const result = calculateTime(volume, startTemp);
-            let resultText = `Microwave time: ${result.time} seconds<br>`;
-            resultText += `Temp after ${result.lowerTime}s: ${result.lowerTemp}°C<br>`;
+            let resultText = `Microwave time: ${result.time} seconds\n`;
+            resultText += `Temp after ${result.lowerTime}s: ${result.lowerTemp}°C\n`;
             resultText += `Temp after ${result.upperTime}s: ${result.upperTemp}°C`;
             
-            document.getElementById('result').innerHTML = resultText;
-        }
-    
-            const time = calculateTime(volume, startTemp);
-            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
+            document.getElementById('result').textContent = resultText;
         }
     
         // Calculator functionality
