@@ -38,9 +38,9 @@
 
     <script>
         function calculateTime(volume, startTemp) {
-            const a = 0.246; 
+            const a = 0.25; 
             const b = -0.310; 
-            const c = -1.681;
+            const c = 10.5;
             const targetTemp = 37;
             
             let time = a * volume + b * startTemp + c;
