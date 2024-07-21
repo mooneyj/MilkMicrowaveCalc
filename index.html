@@ -58,6 +58,7 @@
         // Immediate calculation on input change
         document.getElementById('quantity').addEventListener('input', calculateTime);
         document.getElementById('startTemp').addEventListener('input', calculateTime);
+        document.addEventListener('DOMContentLoaded', calculateAndDisplay);
 
         function calculateTime() {
             const volume = parseFloat(document.getElementById('quantity').value);
