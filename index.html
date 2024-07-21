@@ -37,30 +37,17 @@
     <div id="result"></div>
 
     <script>
-        // Calculator functionality
-        document.getElementById('calculator').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const volume = parseFloat(document.getElementById('quantity').value);
-            const startTemp = parseFloat(document.getElementById('startTemp').value);
-            
+        function calculateTime(volume, startTemp) {
             const a = 0.246; 
             const b = -0.310; 
-            const c = 9.777
+            const c = 9.777;
             const targetTemp = 37;
             
-            let time = a * volume + b * (targetTemp - startTemp) + 9.777;
-            time = Math.ceil(time);
-            
-            document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
-        });
-
-        // Immediate calculation on input change
-        document.getElementById('quantity').addEventListener('input', calculateTime);
-        document.getElementById('startTemp').addEventListener('input', calculateTime);
-        document.addEventListener('DOMContentLoaded', calculateAndDisplay);
-
-        function calculateTime() {
+            let time = a * volume + b * (targetTemp - startTemp) + c;
+            return Math.ceil(time);
+        }
+    
+        function updateResult() {
             const volume = parseFloat(document.getElementById('quantity').value);
             const startTemp = parseFloat(document.getElementById('startTemp').value);
             
@@ -68,17 +55,24 @@
                 document.getElementById('result').textContent = 'Please enter valid numbers';
                 return;
             }
-
-            const a = 0.00919; // seconds per mL
-            const b = 1; // seconds per °C of temperature rise
-            const targetTemp = 37;
-            
-            let time = a * volume + b * (targetTemp - startTemp);
-            time = Math.ceil(time);
-            
+    
+            const time = calculateTime(volume, startTemp);
             document.getElementById('result').textContent = `Microwave time: ${time} seconds`;
         }
-
+    
+        // Calculator functionality
+        document.getElementById('calculator').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateResult();
+        });
+    
+        // Immediate calculation on input change
+        document.getElementById('quantity').addEventListener('input', updateResult);
+        document.getElementById('startTemp').addEventListener('input', updateResult);
+    
+        // Initial calculation on page load
+        document.addEventListener('DOMContentLoaded', updateResult);
+    
         // Service Worker registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
